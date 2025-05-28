@@ -15,6 +15,8 @@ bool SiegePossible(std::shared_ptr<ecl::SiegeSimulation> siege)
 
 double ArtilleryBonus(std::shared_ptr<ecl::SiegeSimulation> siege)
 {
+    double artillery = siege->attacker_artillery_amount * siege->attacker_artillery_levels_contribution_to_siege / 1000;
+    int besieging_artillery = artillery / siege->defender_fort_level;
     switch(siege->defender_fort_level) {
     case 1:{
         if(siege->attacker_napoleon_tactics && siege->attacker_artillery_amount>=8000)return 8.0;
@@ -265,6 +267,7 @@ int main(int argc, char **argv)
                 std::cout << "Surrender!!" << std::endl;
                 break;
             }
+            std::cout << "Wall Breached!" << std::endl;
             siege_sim->wall_breached = std::min(siege_sim->wall_breached+1, 3);
             siege_sim->accumulate_siege_bonus += 2;
         }
@@ -278,25 +281,25 @@ int main(int argc, char **argv)
             else if(siege_point_stage >= 16) {
                 std::cout << "Defender escape" << std::endl;
                 siege_sim->accumulate_siege_bonus += 2;
-                siege_sim->defender_fort_manpower - siege_sim->defender_fort_max_manpower * 0.1;
+                siege_sim->defender_fort_manpower -= siege_sim->defender_fort_max_manpower * 0.1;
                 // Defender escape
             }
             else if(siege_point_stage >= 14) {
                 std::cout << "Water Shortage" << std::endl;
                 siege_sim->accumulate_siege_bonus += 2;
-                siege_sim->defender_fort_manpower - siege_sim->defender_fort_max_manpower * 0.05;
+                siege_sim->defender_fort_manpower -= siege_sim->defender_fort_max_manpower * 0.05;
                 // Water Shortage
             }
             else if(siege_point_stage >= 12) {
                 std::cout << "Food Shortage" << std::endl;
                 siege_sim->accumulate_siege_bonus += 2;
-                siege_sim->defender_fort_manpower - siege_sim->defender_fort_max_manpower * 0.03;
+                siege_sim->defender_fort_manpower -= siege_sim->defender_fort_max_manpower * 0.03;
                 // Food Shortage
             }
             else if(siege_point_stage >= 5) {
                 std::cout << "Supplies Shortage" << std::endl;
                 siege_sim->accumulate_siege_bonus += 2;
-                siege_sim->defender_fort_manpower - siege_sim->defender_fort_max_manpower * 0.01;
+                siege_sim->defender_fort_manpower -= siege_sim->defender_fort_max_manpower * 0.01;
                 // Supplies Shortage
             }
             else {
@@ -312,7 +315,7 @@ int main(int argc, char **argv)
         
         
     }
-    printf("Siege Completed in %d days, with %d casualties.", siege_sim->accumulate_siege_time, siege_sim->attacker_accumulate_casualties);
+    printf("Siege Completed in %d days, with %d casualties.\n", siege_sim->accumulate_siege_time, siege_sim->attacker_accumulate_casualties);
 
     return 0;
 }

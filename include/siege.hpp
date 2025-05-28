@@ -20,6 +20,8 @@ struct SiegeSimulation {
     int attacker_fort_blockade;
     bool attacker_napoleon_tactics;
 
+    double attacker_artillery_levels_contribution_to_siege;
+
     double defender_fort_defense;
     double defender_military_tactics;
 
